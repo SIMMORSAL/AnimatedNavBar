@@ -31,4 +31,6 @@ public abstract class NavView extends View {
     abstract public void activate();
 
     abstract public void deactivate();
+
+    abstract public void onViewPagerScroll(float scroll);
 }

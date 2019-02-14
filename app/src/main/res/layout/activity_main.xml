@@ -30,6 +30,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
+            app:showSideDividers="true"
+            app:strokeWidth="8dp"
             android:layout_weight="1" />
 
         <com.simmorsal.animatednavbar.NavBarRoundedTop

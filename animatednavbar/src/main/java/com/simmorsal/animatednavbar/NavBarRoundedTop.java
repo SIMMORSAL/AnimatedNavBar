@@ -65,16 +65,6 @@ public class NavBarRoundedTop extends NavView {
         super.onDraw(canvas);
     }
 
-    @Override
-    public void activate() {
-
-    }
-
-    @Override
-    public void deactivate() {
-
-    }
-
     private void initializeStuff() {
         paintBlock = new Paint(Paint.ANTI_ALIAS_FLAG);
         paintText = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -137,6 +127,21 @@ public class NavBarRoundedTop extends NavView {
 //        canvas.drawArc(oval, 180, 180, false, paintBlock);
     }
 
+
+    @Override
+    public void activate() {
+
+    }
+
+    @Override
+    public void deactivate() {
+
+    }
+
+    @Override
+    public void onViewPagerScroll(float scroll) {
+
+    }
 
     ////////////////////////////////////////////////////////////////////////////////
     //                    //
