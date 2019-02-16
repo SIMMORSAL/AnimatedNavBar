@@ -1,6 +1,5 @@
 package com.simmorsal.animatednavbar;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
@@ -28,9 +27,9 @@ public abstract class NavView extends View {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    abstract public void activate();
+    abstract public void activate(boolean animate);
 
-    abstract public void deactivate();
+    abstract public void deactivate(boolean animate);
 
     abstract public void onViewPagerScroll(float scroll);
 }

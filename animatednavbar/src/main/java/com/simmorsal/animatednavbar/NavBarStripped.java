@@ -15,12 +15,12 @@ public class NavBarStripped extends NavView {
     }
 
     @Override
-    public void activate() {
+    public void activate(boolean animate) {
 
     }
 
     @Override
-    public void deactivate() {
+    public void deactivate(boolean animate) {
 
     }
 

@@ -2,31 +2,54 @@ package com.simmorsal.animatednavbar;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 public class NavBarSlideFromTop extends NavView {
 
 
+    private int animationSpeed = 200;
+    private int animationPace;
+    private Long animationChangeSpeed = 16L;
+    private int titleSize = 15;
+
     private Paint paintBackgroundUnder = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint paintBackgroundOver = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint paintIcon = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private Paint paintTitle = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Paint paintTitle = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
     private RectF rectFBackgroundOver = new RectF();
     private RectF rectFIcon = new RectF();
-    private RectF rectFTitle = new RectF();
+    private Rect rectTitle = new Rect();
+    private Path pathTitle = new Path();
 
     private Bitmap icon = null;
     private String title = null;
 
+    private boolean isActive = false;
+    private boolean isAnimating = false;
     private boolean isFirstRunPassed = false;
+    private int bottomBGOver = 0;
+
+    private float posTitleX;
+    private float posTitleY;
+
+    private Handler handlerAnimation = new Handler(Looper.getMainLooper());
 
 
     public NavBarSlideFromTop(Context context) {
@@ -41,64 +64,117 @@ public class NavBarSlideFromTop extends NavView {
         initializeStuff();
     }
 
+    private Runnable runnableActivation = new Runnable() {
+        @Override
+        public void run() {
+            bottomBGOver = bottomBGOver + animationPace;
+            rectFBackgroundOver.bottom = bottomBGOver;
+            invalidate();
+            if (rectFBackgroundOver.bottom < getMeasuredHeight())
+                handlerAnimation.postDelayed(this, animationChangeSpeed);
+            else
+                isAnimating = false;
+        }
+    };
+    private Runnable runnableDeactivation = new Runnable() {
+        @Override
+        public void run() {
+            bottomBGOver = bottomBGOver - animationPace;
+            rectFBackgroundOver.bottom = bottomBGOver;
+            invalidate();
+            if (rectFBackgroundOver.bottom > 0)
+                handlerAnimation.postDelayed(this, animationChangeSpeed);
+            else
+                isAnimating = false;
+        }
+    };
+
     private void initializeStuff() {
         paintBackgroundUnder.setColor(Color.DKGRAY);
         paintBackgroundOver.setColor(Color.MAGENTA);
-        paintIcon.setColor(Color.WHITE);
-        paintTitle.setColor(Color.BLACK);
-    }
+//        paintIcon.setColor(Color.WHITE);
+        paintIcon.setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
+        paintTitle.setColor(Color.WHITE);
+        paintTitle.setFakeBoldText(true);
 
+        // setting proper animation change speed based on phone's frame rate
+        WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        if (windowManager != null) {
+            animationChangeSpeed = (long) Math.round(1000f / windowManager.getDefaultDisplay().getRefreshRate());
+        }
+    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
+        int width = getMeasuredWidth();
+        int height = getMeasuredHeight();
+        int shortestBorder = height < width ? height : width;
+        int longestBorder = height > width ? height : width;
+
         isFirstRunPassed = true;
 
+        animationPace = (int) (height / ((float) animationSpeed / (float) animationChangeSpeed));
 
-        rectFBackgroundOver.set(0, 0, widthMeasureSpec, heightMeasureSpec);
-
-        int shortestBorder = heightMeasureSpec < widthMeasureSpec ? heightMeasureSpec : widthMeasureSpec;
-        int longestBorder = heightMeasureSpec > widthMeasureSpec ? heightMeasureSpec : widthMeasureSpec;
+        if (isActive) {
+            rectFBackgroundOver.set(0, 0, width, height);
+            bottomBGOver = getMeasuredHeight();
+        } else {
+            rectFBackgroundOver.set(0, 0, width, 0);
+            bottomBGOver = 0;
+        }
 
         int widthIcon;
         if (icon != null) {
             if (title == null) {
                 widthIcon = (int) (shortestBorder * .75f);
                 rectFIcon.set(
-                        (widthMeasureSpec - widthIcon) / 2f,
-                        (heightMeasureSpec - widthIcon) / 2f,
-                        ((widthMeasureSpec - widthIcon) / 2f) + widthIcon,
-                        ((heightMeasureSpec - widthIcon) / 2f) + widthIcon
+                        (width - widthIcon) / 2f,
+                        (height - widthIcon) / 2f,
+                        ((width - widthIcon) / 2f) + widthIcon,
+                        ((height - widthIcon) / 2f) + widthIcon
                 );
             } else {
                 widthIcon = (int) (shortestBorder * .4f);
                 rectFIcon.set(
-                        (widthMeasureSpec - widthIcon) / 2f,
-                        heightMeasureSpec * .12f,
-                        ((widthMeasureSpec - widthIcon) / 2f) + widthIcon,
-                        (heightMeasureSpec * .12f) + widthIcon
+                        (width - widthIcon) / 2f,
+                        height * .12f,
+                        ((width - widthIcon) / 2f) + widthIcon,
+                        (height * .12f) + widthIcon
                 );
             }
         }
 
         if (title != null && !title.isEmpty()) {
-            // int widthTitle = (int) (widthMeasureSpec * .9f);
-            if (icon == null) {
-                rectFTitle.set(
-                        widthMeasureSpec * .05f,
-                        heightMeasureSpec * .2f,
-                        widthMeasureSpec * .95f,
-                        heightMeasureSpec * .8f
-                );
-            } else {
-                rectFTitle.set(
-                        widthMeasureSpec * .05f,
-                        heightMeasureSpec * .6f,
-                        widthMeasureSpec * .95f,
-                        heightMeasureSpec * .88f
-                );
+            // int widthTitle = (int) (width * .9f);
+//            if (icon == null) {
+//                rectTitle.set(
+//                        width * .05f,
+//                        height * .2f,
+//                        width * .95f,
+//                        height * .8f
+//                );
+//            } else {
+//                rectTitle.set(
+//                        width * .05f,
+//                        height * .6f,
+//                        width * .95f,
+//                        height * .88f
+//                );
+//            }
+
+            paintTitle.getTextBounds("a", 0, 1, rectTitle);
+
+            posTitleY = height - ((height - (rectTitle.bottom - rectTitle.top)) / 2f);
+            if (icon != null) {
+                posTitleY += rectFIcon.height() / 2 /* + Tools.dpToPx(4)*/;
             }
+
+            paintTitle.setTextSize(Tools.spToPx(titleSize));
+            posTitleX = (width - paintTitle.measureText(title)) / 2;
+//            Log.i("11111", "NavBarSlideFromTop => onMeasure: " + height + "  " + (rectTitle.bottom - rectTitle.top) + "  " + posTitleY);
+            pathTitle.addRect(rectTitle.left, rectTitle.top, rectTitle.right, rectTitle.bottom, Path.Direction.CCW);
         }
     }
 
@@ -107,21 +183,58 @@ public class NavBarSlideFromTop extends NavView {
         super.onDraw(canvas);
 
 
+        canvas.drawRect(0, 0, getMeasuredWidth(), getMeasuredHeight(), paintBackgroundUnder);
+        canvas.drawRect(rectFBackgroundOver, paintBackgroundOver);
+        if (icon != null) {
+//            canvas.drawRect(rectFIcon, paintIcon);
+            canvas.drawBitmap(icon, null, rectFIcon, paintIcon);
+        }
+        if (title != null) {
+//            Log.i("11111", "NavBarSlideFromTop => onDraw: " + rectTitle.bottom + "  " + rectTitle.top + "  " + rectTitle.right + "  " + rectTitle.left + "  " + posTitleX + "  " + posTitleY + "  " + paintTitle.measureText(title));
+            canvas.drawText(title, posTitleX, posTitleY, paintTitle);
+        }
     }
 
     @Override
-    public void activate() {
+    public void activate(boolean animate) {
+        isActive = true;
 
+        if (isAnimating)
+            handlerAnimation.removeCallbacksAndMessages(null);
+
+        if (animate) {
+            isAnimating = true;
+            handlerAnimation.post(runnableActivation);
+        } else {
+            rectFBackgroundOver.bottom = getMeasuredHeight();
+            bottomBGOver = getMeasuredHeight();
+            invalidate();
+        }
     }
 
     @Override
-    public void deactivate() {
+    public void deactivate(boolean animate) {
+        isActive = false;
 
+        if (isAnimating)
+            handlerAnimation.removeCallbacksAndMessages(null);
+
+        if (animate) {
+            isAnimating = true;
+            handlerAnimation.post(runnableDeactivation);
+        } else {
+            rectFBackgroundOver.bottom = 0;
+            bottomBGOver = 0;
+            invalidate();
+        }
     }
 
     @Override
     public void onViewPagerScroll(float scroll) {
-
+        if (isAnimating) { // todo check to see if scrolling affects current item
+            handlerAnimation.removeCallbacksAndMessages(null);
+            isAnimating = false;
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -129,6 +242,17 @@ public class NavBarSlideFromTop extends NavView {
     //   PUBLIC METHODS   //
     //                    //
     ////////////////////////////////////////////////////////////////////////////////
+
+    public NavBarSlideFromTop setTitleSize(int titleSizeInPx) {
+        this.titleSize = titleSizeInPx;
+        requestLayout();
+        return this;
+    }
+
+    public NavBarSlideFromTop setAnimationSpeed(int animationSpeed) {
+        this.animationSpeed = animationSpeed;
+        return this;
+    }
 
     public NavBarSlideFromTop setTypeface(Typeface typeface) {
         paintTitle.setTypeface(typeface);
@@ -150,15 +274,17 @@ public class NavBarSlideFromTop extends NavView {
             if (isFirstRunPassed) {
                 if (requiresRemeasure)
                     requestLayout();
-                else
+                else {
+                    posTitleX = (rectTitle.width() - paintTitle.measureText(title)) / 2;
                     invalidate();
+                }
             }
         }
         return this;
     }
 
     public NavBarSlideFromTop setIcon(int resourceId) {
-        return setIcon(BitmapFactory.decodeResource(getResources(), resourceId));
+        return setIcon(ContextCompat.getDrawable(getContext(), resourceId));
     }
 
     public Bitmap getIcon() {
@@ -179,6 +305,20 @@ public class NavBarSlideFromTop extends NavView {
             }
         }
         return this;
+    }
+
+    public NavBarSlideFromTop setIcon(Drawable drawable) {
+
+        if (drawable instanceof BitmapDrawable) {
+            return setIcon(((BitmapDrawable) drawable).getBitmap());
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return setIcon(bitmap);
     }
 
     public NavBarSlideFromTop setBackgroundOverColor(int color) {
@@ -207,6 +347,10 @@ public class NavBarSlideFromTop extends NavView {
         if (isFirstRunPassed)
             invalidate();
         return this;
+    }
+
+    public boolean isActive() {
+        return isActive;
     }
 }
 

@@ -8,6 +8,31 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="200dp">
+
+        <com.simmorsal.animatednavbar.NavBarSlideFromTop
+            android:id="@+id/nbs1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <com.simmorsal.animatednavbar.NavBarSlideFromTop
+            android:id="@+id/nbs2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <com.simmorsal.animatednavbar.NavBarSlideFromTop
+            android:id="@+id/nbs3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="110dp"
         android:layout_alignParentBottom="true">
 
@@ -30,9 +55,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
+            android:layout_weight="1"
             app:showSideDividers="true"
-            app:strokeWidth="8dp"
-            android:layout_weight="1" />
+            app:strokeWidth="8dp" />
 
         <com.simmorsal.animatednavbar.NavBarRoundedTop
             android:layout_width="0dp"

@@ -4,18 +4,13 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
-import androidx.collection.ArraySet;
 import androidx.core.content.ContextCompat;
 
 public class NavBarRoundedTop extends NavView {
@@ -80,7 +75,7 @@ public class NavBarRoundedTop extends NavView {
             strokeWidth = attr.getDimension(R.styleable.NavBarRoundedTop_strokeWidth, 2);
             if (strokeWidth != 2)
                 strokeWidth = Tools.pxToDp(strokeWidth);
-            Log.i("11111", "NavBarRoundedTop => initializeStuff: " + attr.getBoolean(R.styleable.NavBarRoundedTop_showSideDividers, false));
+//            Log.i("11111", "NavBarRoundedTop => initializeStuff: " + attr.getBoolean(R.styleable.NavBarRoundedTop_showSideDividers, false));
             showSideDividers = attr.getBoolean(R.styleable.NavBarRoundedTop_showSideDividers, false);
         } catch (Exception e) {
             e.printStackTrace();
@@ -129,12 +124,12 @@ public class NavBarRoundedTop extends NavView {
 
 
     @Override
-    public void activate() {
+    public void activate(boolean animate) {
 
     }
 
     @Override
-    public void deactivate() {
+    public void deactivate(boolean animate) {
 
     }
 
