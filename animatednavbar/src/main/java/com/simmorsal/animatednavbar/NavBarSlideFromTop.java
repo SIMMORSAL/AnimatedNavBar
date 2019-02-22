@@ -17,7 +17,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
@@ -31,7 +30,7 @@ public class NavBarSlideFromTop extends NavView {
     private Long animationChangeSpeed = 16L;
     private int titleSize = 15;
     private int position;
-    private int animationSpeed = 300;
+    private int animationSpeed = 200;
 
     private Paint paintBackgroundUnder = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint paintBackgroundOver = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -55,9 +54,6 @@ public class NavBarSlideFromTop extends NavView {
 
     private Handler handlerAnimation = new Handler(Looper.getMainLooper());
 
-//    private boolean  = false;
-
-
     public NavBarSlideFromTop(Context context) {
         super(context);
 
@@ -79,14 +75,12 @@ public class NavBarSlideFromTop extends NavView {
                 handlerAnimation.postDelayed(this, animationChangeSpeed);
             else
                 isAnimating = false;
-            Log.i("11111", "NavBarSlideFromTop => run: " + rectFBackgroundOver.bottom + "   " + getMeasuredHeight() + "   " + animationPace);
         }
     };
 
     private void initializeStuff() {
         paintBackgroundUnder.setColor(Color.DKGRAY);
         paintBackgroundOver.setColor(Color.MAGENTA);
-//        paintIcon.setColor(Color.WHITE);
         paintIcon.setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
         paintTitle.setColor(Color.WHITE);
         paintTitle.setFakeBoldText(true);
@@ -120,8 +114,6 @@ public class NavBarSlideFromTop extends NavView {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        Log.i("11111", "NavBarSlideFromTop => onMeasure: " + "MEASURED");
-
         width = getMeasuredWidth();
         height = getMeasuredHeight();
         int shortestBorder = height < width ? height : width;
@@ -130,6 +122,8 @@ public class NavBarSlideFromTop extends NavView {
 
         animationPace = (int) (height / ((float) animationSpeed / (float) animationChangeSpeed));
 
+        // the reason im performing this check is that the parent, which is most likely the NavBarLayout, extended from LinearLayout
+        // for some reason calls onMeasure on itself, which causes this onMeasure to be called as well,
         if (bottomBGOver == -1 || rectFBackgroundOver.right == 0.0) {
             if (isActive) {
                 rectFBackgroundOver.set(0, 0, width, height);
@@ -162,33 +156,16 @@ public class NavBarSlideFromTop extends NavView {
         }
 
         if (title != null && !title.isEmpty()) {
-            // int widthTitle = (int) (width * .9f);
-//            if (icon == null) {
-//                rectTitle.set(
-//                        width * .05f,
-//                        height * .2f,
-//                        width * .95f,
-//                        height * .8f
-//                );
-//            } else {
-//                rectTitle.set(
-//                        width * .05f,
-//                        height * .6f,
-//                        width * .95f,
-//                        height * .88f
-//                );
-//            }
 
             paintTitle.getTextBounds("a", 0, 1, rectTitle);
 
             posTitleY = height - ((height - (rectTitle.bottom - rectTitle.top)) / 2f);
             if (icon != null) {
-                posTitleY += rectFIcon.height() / 2 /* + Tools.dpToPx(4)*/;
+                posTitleY += rectFIcon.height() / 2;
             }
 
             paintTitle.setTextSize(Tools.spToPx(titleSize));
             posTitleX = (width - paintTitle.measureText(title)) / 2;
-//            Log.i("11111", "NavBarSlideFromTop => onMeasure: " + height + "  " + (rectTitle.bottom - rectTitle.top) + "  " + posTitleY);
             pathTitle.addRect(rectTitle.left, rectTitle.top, rectTitle.right, rectTitle.bottom, Path.Direction.CCW);
 
 
@@ -200,24 +177,18 @@ public class NavBarSlideFromTop extends NavView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-//        if (isActive)
-//            Log.i("11111", "NavBarSlideFromTop => onDraw: " + rectFBackgroundOver.bottom);
-
         canvas.drawRect(0, 0, getMeasuredWidth(), getMeasuredHeight(), paintBackgroundUnder);
         canvas.drawRect(rectFBackgroundOver, paintBackgroundOver);
         if (icon != null) {
-//            canvas.drawRect(rectFIcon, paintIcon);
             canvas.drawBitmap(icon, null, rectFIcon, paintIcon);
         }
         if (title != null) {
-//            Log.i("11111", "NavBarSlideFromTop => onDraw: " + rectTitle.bottom + "  " + rectTitle.top + "  " + rectTitle.right + "  " + rectTitle.left + "  " + posTitleX + "  " + posTitleY + "  " + paintTitle.measureText(title));
             canvas.drawText(title, posTitleX, posTitleY, paintTitle);
         }
     }
 
     @Override
     public void activate(boolean animate) {
-        Log.i("11111", "NavBarSlideFromTop => activate: " + "ACTIVATE");
         isActive = true;
 
         if (isAnimating)
@@ -235,7 +206,6 @@ public class NavBarSlideFromTop extends NavView {
 
     @Override
     public void deactivate(boolean animate) {
-        Log.i("11111", "NavBarSlideFromTop => deactivate: " + "DEACTIVATE");
         isActive = false;
 
         if (isAnimating)
@@ -253,19 +223,8 @@ public class NavBarSlideFromTop extends NavView {
 
     @Override
     public void onViewPagerScroll(float scroll) {
-//        Log.i("11111", "NavBarSlideFromTop => onViewPagerScroll: " + scroll + "  " + isAnimating);
         if (!isAnimating) {
-//        if (isAnimating) {
-//            handlerAnimation.removeCallbacksAndMessages(null);
-//            isAnimating = false;
-//        }
-
-//        Log.i("11111", "NavBarSlideFromTop => onViewPagerScroll: " + scroll);
-//        if (scroll > 0) {
             bottomBGOver = (int) (scroll * height);
-//        } else {
-//            bottomBGOver = (int) ((1 + scroll) * height);
-//        }
             rectFBackgroundOver.bottom = bottomBGOver;
             invalidate();
         }

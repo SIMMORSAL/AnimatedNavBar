@@ -2,9 +2,10 @@ package com.simmorsal.animatednavbar;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
+
+import com.simmorsal.animatednavbar.Interfaces.OnPageChangeListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,8 @@ public class NavBarLayout extends LinearLayout {
     private int lastSwipedToPosition = -1;
     private int lastSwipedToPositionCached = -1;
 
+    private OnPageChangeListener onPageChangeListener;
+
 
     public NavBarLayout(Context context) {
         super(context);
@@ -41,13 +44,6 @@ public class NavBarLayout extends LinearLayout {
 
     private void initialize() {
 
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        Log.i("11111", "NavBarLayout => onMeasure: " + "MEASURED LAYOUT");
     }
 
     private void initializeWithAttrs(AttributeSet attrs) {
@@ -78,37 +74,23 @@ public class NavBarLayout extends LinearLayout {
             viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-//                    if (positionOffset == 0) {
-//                    for (int i = 0; i < listNavView.size(); i++)
-//                        if (i != position)
-//                            listNavView.get(i).onViewPagerScroll(0);
-//                    }
+                    if (onPageChangeListener != null)
+                        onPageChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
 
 
-//                    if (position == indexCurrentTab) {
-//                        lastSwipedToPosition = position + 1;
-//                    } else {
-//                        lastSwipedToPosition = position;
-//                    }
-//
-//                    if (lastSwipedToPositionCached != -1
-//                            && lastSwipedToPositionCached != lastSwipedToPosition) {
-//                        listNavView.get(lastSwipedToPositionCached).deactivate(false);
-//                    }
                     if (!isPageChanging) {
-
                         listNavView.get(position).onViewPagerScroll(1f - positionOffset);
                         if (position != listNavView.size() - 1)
                             listNavView.get(position + 1).onViewPagerScroll(positionOffset);
-//                    Log.i("11111", "NavBarLayout => onPageScrolled: " + positionOffset + "   " + position);
                     } else if (positionOffset == 0.0)
                         isPageChanging = false;
                 }
 
                 @Override
                 public void onPageSelected(int position) {
-                    // TODO add listener here to be used in MainActivity
+                    if (onPageChangeListener != null)
+                        onPageChangeListener.onPageSelected(position);
+
                     listNavView.get(indexLastTab).deactivate(true);
                     listNavView.get(position).activate(true);
                     indexLastTab = position;
@@ -117,6 +99,8 @@ public class NavBarLayout extends LinearLayout {
 
                 @Override
                 public void onPageScrollStateChanged(int state) {
+                    if (onPageChangeListener != null)
+                        onPageChangeListener.onPageScrollStateChanged(state);
 
                 }
             });
@@ -162,6 +146,11 @@ public class NavBarLayout extends LinearLayout {
 
     public NavBarLayout setDefaultTab(int position) {
         indexDefaultTab = position;
+        return this;
+    }
+
+    public NavBarLayout addOnPageChangeListener(OnPageChangeListener l) {
+        onPageChangeListener = l;
         return this;
     }
 }
