@@ -29,6 +29,8 @@ public abstract class NavView extends View {
 
     abstract public void setPosition(int position);
 
+    abstract public int getPosition();
+
     abstract public void activate(boolean animate);
 
     abstract public void deactivate(boolean animate);

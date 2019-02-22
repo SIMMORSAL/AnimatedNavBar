@@ -43,9 +43,26 @@ public class MainActivity extends AppCompatActivity {
         adapter.addItem(new Fragment1().setColor(Color.parseColor("#E91E63")));
         adapter.addItem(new Fragment1().setColor(Color.parseColor("#3F51B5")));
         adapter.addItem(new Fragment1().setColor(Color.parseColor("#FF9800")));
+        adapter.addItem(new Fragment1().setColor(Color.parseColor("#E64A19")));
+//        adapter.addItem(new Fragment1().setColor(Color.parseColor("#5D4037")));
+//
+//
+        navBarLayout.addNavView(
+                new NavBarSlideFromTop(this)
+                        .setBackgroundOverColor(Color.parseColor("#009688"))
+                        .setIcon(R.drawable.ic_audiotrack_black_24dp)
+                        .setIconSize(24)
+        );
+
+//        navBarLayout.addNavView(
+//                new NavBarSlideFromTop(this)
+//                        .setBackgroundOverColor(Color.parseColor("#009688"))
+//                        .setIcon(R.drawable.ic_audiotrack_black_24dp)
+//                        .setIconSize(24)
+//        );
 
         viewPager.setAdapter(adapter);
-
+        navBarLayout.setDefaultTab(2);
         navBarLayout.setViewPager(viewPager);
     }
 
@@ -73,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
         nbs3.setTitle("QWERTY")
                 .setTitleSize(12)
+                .setBackgroundOverColor(Color.parseColor("#009688"))
                 .setIcon(R.drawable.ic_face_black_24dp);
 
         nbs1.setOnClickListener(new View.OnClickListener() {

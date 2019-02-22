@@ -25,6 +25,11 @@ public class NavBarStripped extends NavView {
     }
 
     @Override
+    public int getPosition() {
+        return position;
+    }
+
+    @Override
     public void activate(boolean animate) {
 
     }

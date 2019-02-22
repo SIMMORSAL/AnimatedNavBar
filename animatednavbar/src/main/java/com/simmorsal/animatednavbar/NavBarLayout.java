@@ -20,6 +20,7 @@ public class NavBarLayout extends LinearLayout {
     private ViewPager viewPager;
     private boolean isViewPagerChangeListenerSet = false;
     private boolean isPageChanging = false;
+    private boolean hasGettingViewsFromXMLFinished = false;
     private int indexDefaultTab = 0;
     private int indexCurrentTab;
     private int indexLastTab;
@@ -55,13 +56,41 @@ public class NavBarLayout extends LinearLayout {
             public void onGlobalLayout() {
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
+//                int listSizeBeforeXML = listNavView.size();
+//                int count = 0;
+//
+//                List<NavView> list = new ArrayList<>(listNavView);
+                listNavView.clear();
+
                 for (int i = 0; i < getChildCount(); i++) {
                     if (getChildAt(i) instanceof NavView) {
                         ((NavView) getChildAt(i)).setPosition(listNavView.size());
                         listNavView.add((NavView) getChildAt(i));
+//                        count++;
                     }
                 }
 
+//                Log.i("11111", "NavBarLayout => onGlobalLayout: " + listNavView.size());
+
+                // moving all previously added items added by `addNavView` to the end of the `listNavView`
+//                for (int i = 0; i < listSizeBeforeXML; i++) {
+//                    Log.i("11111", "NavBarLayout => onGlobalLayout: " + listNavView.get(0).getPosition() + "  " + count);
+//                    listNavView.get(0).setPosition(listNavView.get(0).getPosition() + count);
+//                    listNavView.add(listNavView.get(0));
+//                    listNavView.remove(0);
+//                }
+//                for (int i = 0; i < list.size(); i++) {
+//                    NavView navView = list.get(i);
+//                    navView.setPosition(listNavView.size());
+//                    listNavView.add(navView);
+//                    Log.i("11111", "NavBarLayout => onGlobalLayout: " + "HAPPENS");
+//                }
+
+//                Log.i("11111", "NavBarLayout => onGlobalLayout: " + "SIZE: " + listNavView.size() + "  " + list.size());
+//                for (int i = 0; i < listNavView.size(); i++)
+//                    Log.i("11111", "NavBarLayout => onGlobalLayout: " + listNavView.get(i).getId());
+
+                hasGettingViewsFromXMLFinished = true;
                 initializeViewPagerBehaviour();
             }
         });
@@ -69,7 +98,7 @@ public class NavBarLayout extends LinearLayout {
     }
 
     private void initializeViewPagerBehaviour() {
-        if (!isViewPagerChangeListenerSet && !listNavView.isEmpty() && viewPager != null) {
+        if (!isViewPagerChangeListenerSet && !listNavView.isEmpty() && viewPager != null && hasGettingViewsFromXMLFinished) {
             isViewPagerChangeListenerSet = true;
             viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
@@ -79,9 +108,10 @@ public class NavBarLayout extends LinearLayout {
 
 
                     if (!isPageChanging) {
-                        listNavView.get(position).onViewPagerScroll(1f - positionOffset);
-                        if (position != listNavView.size() - 1)
+                        if (position != listNavView.size() - 1) {
+                            listNavView.get(position).onViewPagerScroll(1f - positionOffset);
                             listNavView.get(position + 1).onViewPagerScroll(positionOffset);
+                        }
                     } else if (positionOffset == 0.0)
                         isPageChanging = false;
                 }
@@ -107,6 +137,7 @@ public class NavBarLayout extends LinearLayout {
 
 
             // starting the default tab
+            viewPager.setCurrentItem(indexDefaultTab, false);
             listNavView.get(indexDefaultTab).activate(false);
             for (int i = 0; i < listNavView.size(); i++)
                 if (i != indexDefaultTab)
@@ -123,7 +154,12 @@ public class NavBarLayout extends LinearLayout {
     ////////////////////////////////////////////////////////////////////////////////
 
     public NavBarLayout addNavView(NavView navView) {
-        // TODO create layout params and give it to the navView and add it to NavBarLayout
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT);
+        layoutParams.weight = 1;
+
+        navView.setLayoutParams(layoutParams);
+        addView(navView);
+
         navView.setPosition(listNavView.size());
         listNavView.add(navView);
         initializeViewPagerBehaviour();
