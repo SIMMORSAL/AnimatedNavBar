@@ -2,7 +2,9 @@
 
  - Do not call `addOnPageChangeListener` on the ViewPager you pass to the NavBarLayout. 
    Instead call it on `navBarLayout`:\
-   `navBarLayout.addOnPageChangeListener(...)`
+   ``` java
+   navBarLayout.addOnPageChangeListener(...)
+   ```
 
 ## Contribution
 
