@@ -22,10 +22,7 @@ public class NavBarLayout extends LinearLayout {
     private boolean isPageChanging = false;
     private boolean hasGettingViewsFromXMLFinished = false;
     private int indexDefaultTab = 0;
-    private int indexCurrentTab;
     private int indexLastTab;
-    private int lastSwipedToPosition = -1;
-    private int lastSwipedToPositionCached = -1;
 
     private OnPageChangeListener onPageChangeListener;
 
@@ -56,39 +53,16 @@ public class NavBarLayout extends LinearLayout {
             public void onGlobalLayout() {
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-//                int listSizeBeforeXML = listNavView.size();
-//                int count = 0;
-//
-//                List<NavView> list = new ArrayList<>(listNavView);
+                // so that if a view is added to this layout with #addNavView, it would be removed
+                // the list and added again within the for loop below.
                 listNavView.clear();
 
                 for (int i = 0; i < getChildCount(); i++) {
                     if (getChildAt(i) instanceof NavView) {
                         ((NavView) getChildAt(i)).setPosition(listNavView.size());
                         listNavView.add((NavView) getChildAt(i));
-//                        count++;
                     }
                 }
-
-//                Log.i("11111", "NavBarLayout => onGlobalLayout: " + listNavView.size());
-
-                // moving all previously added items added by `addNavView` to the end of the `listNavView`
-//                for (int i = 0; i < listSizeBeforeXML; i++) {
-//                    Log.i("11111", "NavBarLayout => onGlobalLayout: " + listNavView.get(0).getPosition() + "  " + count);
-//                    listNavView.get(0).setPosition(listNavView.get(0).getPosition() + count);
-//                    listNavView.add(listNavView.get(0));
-//                    listNavView.remove(0);
-//                }
-//                for (int i = 0; i < list.size(); i++) {
-//                    NavView navView = list.get(i);
-//                    navView.setPosition(listNavView.size());
-//                    listNavView.add(navView);
-//                    Log.i("11111", "NavBarLayout => onGlobalLayout: " + "HAPPENS");
-//                }
-
-//                Log.i("11111", "NavBarLayout => onGlobalLayout: " + "SIZE: " + listNavView.size() + "  " + list.size());
-//                for (int i = 0; i < listNavView.size(); i++)
-//                    Log.i("11111", "NavBarLayout => onGlobalLayout: " + listNavView.get(i).getId());
 
                 hasGettingViewsFromXMLFinished = true;
                 initializeViewPagerBehaviour();
