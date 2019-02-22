@@ -6,12 +6,22 @@ import android.util.AttributeSet;
 import androidx.annotation.Nullable;
 
 public class NavBarStripped extends NavView {
+
+
+    private int position;
+
+
     public NavBarStripped(Context context) {
         super(context);
     }
 
     public NavBarStripped(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    @Override
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     @Override

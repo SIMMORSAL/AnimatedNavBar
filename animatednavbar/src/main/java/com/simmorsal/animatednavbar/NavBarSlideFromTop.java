@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
@@ -16,6 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
@@ -23,11 +25,13 @@ import androidx.core.content.ContextCompat;
 
 public class NavBarSlideFromTop extends NavView {
 
-
-    private int animationSpeed = 200;
+    int width;
+    int height;
     private int animationPace;
     private Long animationChangeSpeed = 16L;
     private int titleSize = 15;
+    private int position;
+    private int animationSpeed = 300;
 
     private Paint paintBackgroundUnder = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint paintBackgroundOver = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -44,12 +48,14 @@ public class NavBarSlideFromTop extends NavView {
     private boolean isActive = false;
     private boolean isAnimating = false;
     private boolean isFirstRunPassed = false;
-    private int bottomBGOver = 0;
+    private int bottomBGOver = -1;
 
     private float posTitleX;
     private float posTitleY;
 
     private Handler handlerAnimation = new Handler(Looper.getMainLooper());
+
+//    private boolean  = false;
 
 
     public NavBarSlideFromTop(Context context) {
@@ -63,29 +69,17 @@ public class NavBarSlideFromTop extends NavView {
 
         initializeStuff();
     }
-
     private Runnable runnableActivation = new Runnable() {
         @Override
         public void run() {
-            bottomBGOver = bottomBGOver + animationPace;
+            bottomBGOver += animationPace;
             rectFBackgroundOver.bottom = bottomBGOver;
             invalidate();
             if (rectFBackgroundOver.bottom < getMeasuredHeight())
                 handlerAnimation.postDelayed(this, animationChangeSpeed);
             else
                 isAnimating = false;
-        }
-    };
-    private Runnable runnableDeactivation = new Runnable() {
-        @Override
-        public void run() {
-            bottomBGOver = bottomBGOver - animationPace;
-            rectFBackgroundOver.bottom = bottomBGOver;
-            invalidate();
-            if (rectFBackgroundOver.bottom > 0)
-                handlerAnimation.postDelayed(this, animationChangeSpeed);
-            else
-                isAnimating = false;
+            Log.i("11111", "NavBarSlideFromTop => run: " + rectFBackgroundOver.bottom + "   " + getMeasuredHeight() + "   " + animationPace);
         }
     };
 
@@ -104,25 +98,46 @@ public class NavBarSlideFromTop extends NavView {
         }
     }
 
+    private Runnable runnableDeactivation = new Runnable() {
+        @Override
+        public void run() {
+            bottomBGOver -= animationPace;
+            rectFBackgroundOver.bottom = bottomBGOver;
+            invalidate();
+            if (rectFBackgroundOver.bottom > 0)
+                handlerAnimation.postDelayed(this, animationChangeSpeed);
+            else
+                isAnimating = false;
+        }
+    };
+
+    @Override
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        int width = getMeasuredWidth();
-        int height = getMeasuredHeight();
+        Log.i("11111", "NavBarSlideFromTop => onMeasure: " + "MEASURED");
+
+        width = getMeasuredWidth();
+        height = getMeasuredHeight();
         int shortestBorder = height < width ? height : width;
         int longestBorder = height > width ? height : width;
 
-        isFirstRunPassed = true;
 
         animationPace = (int) (height / ((float) animationSpeed / (float) animationChangeSpeed));
 
-        if (isActive) {
-            rectFBackgroundOver.set(0, 0, width, height);
-            bottomBGOver = getMeasuredHeight();
-        } else {
-            rectFBackgroundOver.set(0, 0, width, 0);
-            bottomBGOver = 0;
+        if (bottomBGOver == -1 || rectFBackgroundOver.right == 0.0) {
+            if (isActive) {
+                rectFBackgroundOver.set(0, 0, width, height);
+                bottomBGOver = getMeasuredHeight();
+            } else {
+                rectFBackgroundOver.set(0, 0, width, 0);
+                bottomBGOver = 0;
+            }
         }
 
         int widthIcon;
@@ -175,6 +190,9 @@ public class NavBarSlideFromTop extends NavView {
             posTitleX = (width - paintTitle.measureText(title)) / 2;
 //            Log.i("11111", "NavBarSlideFromTop => onMeasure: " + height + "  " + (rectTitle.bottom - rectTitle.top) + "  " + posTitleY);
             pathTitle.addRect(rectTitle.left, rectTitle.top, rectTitle.right, rectTitle.bottom, Path.Direction.CCW);
+
+
+            isFirstRunPassed = true;
         }
     }
 
@@ -182,6 +200,8 @@ public class NavBarSlideFromTop extends NavView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+//        if (isActive)
+//            Log.i("11111", "NavBarSlideFromTop => onDraw: " + rectFBackgroundOver.bottom);
 
         canvas.drawRect(0, 0, getMeasuredWidth(), getMeasuredHeight(), paintBackgroundUnder);
         canvas.drawRect(rectFBackgroundOver, paintBackgroundOver);
@@ -197,6 +217,7 @@ public class NavBarSlideFromTop extends NavView {
 
     @Override
     public void activate(boolean animate) {
+        Log.i("11111", "NavBarSlideFromTop => activate: " + "ACTIVATE");
         isActive = true;
 
         if (isAnimating)
@@ -214,6 +235,7 @@ public class NavBarSlideFromTop extends NavView {
 
     @Override
     public void deactivate(boolean animate) {
+        Log.i("11111", "NavBarSlideFromTop => deactivate: " + "DEACTIVATE");
         isActive = false;
 
         if (isAnimating)
@@ -231,9 +253,21 @@ public class NavBarSlideFromTop extends NavView {
 
     @Override
     public void onViewPagerScroll(float scroll) {
-        if (isAnimating) { // todo check to see if scrolling affects current item
-            handlerAnimation.removeCallbacksAndMessages(null);
-            isAnimating = false;
+//        Log.i("11111", "NavBarSlideFromTop => onViewPagerScroll: " + scroll + "  " + isAnimating);
+        if (!isAnimating) {
+//        if (isAnimating) {
+//            handlerAnimation.removeCallbacksAndMessages(null);
+//            isAnimating = false;
+//        }
+
+//        Log.i("11111", "NavBarSlideFromTop => onViewPagerScroll: " + scroll);
+//        if (scroll > 0) {
+            bottomBGOver = (int) (scroll * height);
+//        } else {
+//            bottomBGOver = (int) ((1 + scroll) * height);
+//        }
+            rectFBackgroundOver.bottom = bottomBGOver;
+            invalidate();
         }
     }
 
@@ -342,8 +376,12 @@ public class NavBarSlideFromTop extends NavView {
         return this;
     }
 
-    public NavBarSlideFromTop setIconColor(int color) {
-        paintIcon.setColor(color);
+    public NavBarSlideFromTop setIconColorFilter(int color) {
+        return setIconColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP));
+    }
+
+    public NavBarSlideFromTop setIconColorFilter(ColorFilter colorFilter) {
+        paintIcon.setColorFilter(colorFilter);
         if (isFirstRunPassed)
             invalidate();
         return this;

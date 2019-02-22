@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 public class NavBarRoundedTop extends NavView {
+
+    private int position;
     private TypedArray attr;
     private Paint paintBlock;
     private Paint paintText;
@@ -44,6 +46,11 @@ public class NavBarRoundedTop extends NavView {
         super(context, attrs);
 
         attr = context.getTheme().obtainStyledAttributes(attrs, R.styleable.NavBarRoundedTop, 0, 0);
+    }
+
+    @Override
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     @Override

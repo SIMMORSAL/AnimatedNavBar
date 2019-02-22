@@ -1,22 +1,59 @@
 package com.simmorsal.sample;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
+import com.simmorsal.animatednavbar.NavBarLayout;
 import com.simmorsal.animatednavbar.NavBarRoundedTop;
 import com.simmorsal.animatednavbar.NavBarSlideFromTop;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 public class MainActivity extends AppCompatActivity {
 
     int i = 2;
+    private ViewPager viewPager;
+    private NavBarLayout navBarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initializer();
+        tests();
+        navBar();
+        nbr();
+        nbs();
+    }
+
+    private void initializer() {
+        viewPager = findViewById(R.id.viewPager);
+        navBarLayout = findViewById(R.id.navBarLayout);
+    }
+
+    private void tests() {
+//        AlertDialog.Builder
+    }
+
+    private void navBar() {
+        AdapterViewPager adapter = new AdapterViewPager(getSupportFragmentManager());
+//        Fragment1 fragment = new Fragment1();
+//        fragment.setColor(Color.parseColor("#E91E63"));
+        adapter.addItem(new Fragment1().setColor(Color.parseColor("#E91E63")));
+//        fragment.setColor(Color.parseColor("#3F51B5"));
+        adapter.addItem(new Fragment1().setColor(Color.parseColor("#3F51B5")));
+//        fragment.setColor(Color.parseColor("#FF9800"));
+        adapter.addItem(new Fragment1().setColor(Color.parseColor("#FF9800")));
+
+        viewPager.setAdapter(adapter);
+
+        navBarLayout.setViewPager(viewPager);
+    }
+
+    private void nbr() {
         final NavBarRoundedTop nbr = findViewById(R.id.nbr);
         nbr.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -25,9 +62,6 @@ public class MainActivity extends AppCompatActivity {
                 nbr.setStrokeWidth(i);
             }
         });
-
-
-        nbs();
     }
 
     private void nbs() {

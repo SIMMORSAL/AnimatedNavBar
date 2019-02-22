@@ -6,11 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <com.simmorsal.animatednavbar.NavBarLayout
+        android:id="@+id/navBarLayout"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="200dp">
+        android:layout_alignParentBottom="true">
 
         <com.simmorsal.animatednavbar.NavBarSlideFromTop
             android:id="@+id/nbs1"
@@ -29,12 +29,19 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
-    </LinearLayout>
+    </com.simmorsal.animatednavbar.NavBarLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/navBarLayout" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="110dp"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:visibility="gone">
 
         <com.simmorsal.animatednavbar.NavBarRoundedTop
             android:id="@+id/nbr"

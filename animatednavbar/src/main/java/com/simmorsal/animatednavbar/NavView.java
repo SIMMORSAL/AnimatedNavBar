@@ -27,6 +27,8 @@ public abstract class NavView extends View {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    abstract public void setPosition(int position);
+
     abstract public void activate(boolean animate);
 
     abstract public void deactivate(boolean animate);
