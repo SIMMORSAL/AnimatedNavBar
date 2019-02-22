@@ -31,6 +31,7 @@ public class NavBarSlideFromTop extends NavView {
     private int titleSize = 15;
     private int position;
     private int animationSpeed = 200;
+    private int sizeIcon = -1;
 
     private Paint paintBackgroundUnder = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint paintBackgroundOver = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -138,6 +139,8 @@ public class NavBarSlideFromTop extends NavView {
         if (icon != null) {
             if (title == null) {
                 widthIcon = (int) (shortestBorder * .75f);
+                if (sizeIcon != -1 && sizeIcon < widthIcon)
+                    widthIcon = sizeIcon;
                 rectFIcon.set(
                         (width - widthIcon) / 2f,
                         (height - widthIcon) / 2f,
@@ -146,6 +149,8 @@ public class NavBarSlideFromTop extends NavView {
                 );
             } else {
                 widthIcon = (int) (shortestBorder * .4f);
+                if (sizeIcon != -1 && sizeIcon < widthIcon)
+                    widthIcon = sizeIcon;
                 rectFIcon.set(
                         (width - widthIcon) / 2f,
                         height * .12f,
@@ -348,6 +353,11 @@ public class NavBarSlideFromTop extends NavView {
 
     public boolean isActive() {
         return isActive;
+    }
+
+    public NavBarSlideFromTop setIconSize(int iconSizeDp) {
+        sizeIcon = Tools.dpToPx(iconSizeDp);
+        return this;
     }
 }
 

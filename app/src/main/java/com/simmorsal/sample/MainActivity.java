@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
-import com.simmorsal.animatednavbar.Interfaces.OnPageChangeListener;
 import com.simmorsal.animatednavbar.NavBarLayout;
 import com.simmorsal.animatednavbar.NavBarRoundedTop;
 import com.simmorsal.animatednavbar.NavBarSlideFromTop;
@@ -41,34 +40,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void navBar() {
         AdapterViewPager adapter = new AdapterViewPager(getSupportFragmentManager());
-//        Fragment1 fragment = new Fragment1();
-//        fragment.setColor(Color.parseColor("#E91E63"));
         adapter.addItem(new Fragment1().setColor(Color.parseColor("#E91E63")));
-//        fragment.setColor(Color.parseColor("#3F51B5"));
         adapter.addItem(new Fragment1().setColor(Color.parseColor("#3F51B5")));
-//        fragment.setColor(Color.parseColor("#FF9800"));
         adapter.addItem(new Fragment1().setColor(Color.parseColor("#FF9800")));
 
         viewPager.setAdapter(adapter);
 
         navBarLayout.setViewPager(viewPager);
-
-        navBarLayout.addOnPageChangeListener(new OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
     }
 
     private void nbr() {
