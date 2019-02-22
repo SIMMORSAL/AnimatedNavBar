@@ -1,4 +1,4 @@
-package com.simmorsal.animatednavbar;
+package com.simmorsal.animatednavbar.navViews;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -18,6 +18,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.WindowManager;
+
+import com.simmorsal.animatednavbar.NavView;
+import com.simmorsal.animatednavbar.utils.Tools;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;

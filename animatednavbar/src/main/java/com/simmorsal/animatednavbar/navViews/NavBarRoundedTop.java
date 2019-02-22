@@ -1,4 +1,4 @@
-package com.simmorsal.animatednavbar;
+package com.simmorsal.animatednavbar.navViews;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -9,6 +9,10 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+
+import com.simmorsal.animatednavbar.NavView;
+import com.simmorsal.animatednavbar.R;
+import com.simmorsal.animatednavbar.utils.Tools;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;

@@ -1,7 +1,9 @@
-package com.simmorsal.animatednavbar;
+package com.simmorsal.animatednavbar.navViews;
 
 import android.content.Context;
 import android.util.AttributeSet;
+
+import com.simmorsal.animatednavbar.NavView;
 
 import androidx.annotation.Nullable;
 

@@ -1,8 +1,8 @@
-package com.simmorsal.animatednavbar;
+package com.simmorsal.animatednavbar.utils;
 
 import android.content.res.Resources;
 
-class Tools {
+public class Tools {
     static public int dpToPx(float dp) {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
@@ -11,11 +11,11 @@ class Tools {
         return (int) (dp / Resources.getSystem().getDisplayMetrics().density);
     }
 
-    public static int spToPx(float sp) {
+    static public int spToPx(float sp) {
         return (int) (sp * Resources.getSystem().getDisplayMetrics().scaledDensity);
     }
 
-    public static int pxToSp(float px) {
+    static public int pxToSp(float px) {
         return (int) (px / Resources.getSystem().getDisplayMetrics().scaledDensity);
     }
 }

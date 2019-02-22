@@ -12,19 +12,19 @@
         android:layout_height="64dp"
         android:layout_alignParentBottom="true">
 
-        <com.simmorsal.animatednavbar.NavBarSlideFromTop
+        <com.simmorsal.animatednavbar.navViews.NavBarSlideFromTop
             android:id="@+id/nbs1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
-        <com.simmorsal.animatednavbar.NavBarSlideFromTop
+        <com.simmorsal.animatednavbar.navViews.NavBarSlideFromTop
             android:id="@+id/nbs2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
-        <com.simmorsal.animatednavbar.NavBarSlideFromTop
+        <com.simmorsal.animatednavbar.navViews.NavBarSlideFromTop
             android:id="@+id/nbs3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -43,7 +43,7 @@
         android:layout_alignParentBottom="true"
         android:visibility="gone">
 
-        <com.simmorsal.animatednavbar.NavBarRoundedTop
+        <com.simmorsal.animatednavbar.navViews.NavBarRoundedTop
             android:id="@+id/nbr"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -52,13 +52,13 @@
             app:showSideDividers="true"
             app:strokeWidth="3.3dp" />
 
-        <com.simmorsal.animatednavbar.NavBarRoundedTop
+        <com.simmorsal.animatednavbar.navViews.NavBarRoundedTop
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:layout_weight="1" />
 
-        <com.simmorsal.animatednavbar.NavBarRoundedTop
+        <com.simmorsal.animatednavbar.navViews.NavBarRoundedTop
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
@@ -66,13 +66,13 @@
             app:showSideDividers="true"
             app:strokeWidth="8dp" />
 
-        <com.simmorsal.animatednavbar.NavBarRoundedTop
+        <com.simmorsal.animatednavbar.navViews.NavBarRoundedTop
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:layout_weight="1" />
 
-        <com.simmorsal.animatednavbar.NavBarRoundedTop
+        <com.simmorsal.animatednavbar.navViews.NavBarRoundedTop
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"

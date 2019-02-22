@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.simmorsal.animatednavbar.NavBarLayout;
-import com.simmorsal.animatednavbar.NavBarRoundedTop;
-import com.simmorsal.animatednavbar.NavBarSlideFromTop;
+import com.simmorsal.animatednavbar.navViews.NavBarRoundedTop;
+import com.simmorsal.animatednavbar.navViews.NavBarSlideFromTop;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
