@@ -2,9 +2,11 @@ package com.simmorsal.animatednavbar;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 
+import com.simmorsal.animatednavbar.Interfaces.OnNavViewClickListener;
 import com.simmorsal.animatednavbar.Interfaces.OnPageChangeListener;
 
 import java.util.ArrayList;
@@ -25,12 +27,15 @@ public class NavBarLayout extends LinearLayout {
     private int indexLastTab;
 
     private OnPageChangeListener onPageChangeListener;
+    private OnNavViewClickListener onNavViewClickListener;
 
 
     public NavBarLayout(Context context) {
         super(context);
 
         initialize();
+
+        hasGettingViewsFromXMLFinished = true;
     }
 
     public NavBarLayout(Context context, @Nullable AttributeSet attrs) {
@@ -59,10 +64,37 @@ public class NavBarLayout extends LinearLayout {
 
                 for (int i = 0; i < getChildCount(); i++) {
                     if (getChildAt(i) instanceof NavView) {
-                        ((NavView) getChildAt(i)).setPosition(listNavView.size());
-                        listNavView.add((NavView) getChildAt(i));
+                        NavView navView = (NavView) getChildAt(i);
+                        (navView).setPosition(listNavView.size());
+                        listNavView.add(navView);
+
+                        final int position = i;
+                        navView.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (indexLastTab != position) {
+                                    if (viewPager != null) {
+                                        viewPager.setCurrentItem(position, true);
+                                    } else {
+                                        listNavView.get(indexLastTab).deactivate(true);
+                                        listNavView.get(position).activate(true);
+                                        indexLastTab = position;
+                                    }
+                                }
+
+
+                                try {
+                                    // used try catch instead of checking if the listener is null so that if
+                                    // the user initialized it later, this would still work
+                                    onNavViewClickListener.onClick((NavView) v, position);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
                     }
                 }
+
 
                 hasGettingViewsFromXMLFinished = true;
                 initializeViewPagerBehaviour();
@@ -82,8 +114,8 @@ public class NavBarLayout extends LinearLayout {
 
 
                     if (!isPageChanging) {
+                        listNavView.get(position).onViewPagerScroll(1f - positionOffset);
                         if (position != listNavView.size() - 1) {
-                            listNavView.get(position).onViewPagerScroll(1f - positionOffset);
                             listNavView.get(position + 1).onViewPagerScroll(positionOffset);
                         }
                     } else if (positionOffset == 0.0)
@@ -134,8 +166,32 @@ public class NavBarLayout extends LinearLayout {
         navView.setLayoutParams(layoutParams);
         addView(navView);
 
-        navView.setPosition(listNavView.size());
-        listNavView.add(navView);
+        if (hasGettingViewsFromXMLFinished) {
+            navView.setPosition(listNavView.size());
+            listNavView.add(navView);
+
+            final int position = navView.getPosition();
+            navView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (indexLastTab != position) {
+                        if (viewPager != null) {
+                            viewPager.setCurrentItem(position, true);
+                        } else {
+                            listNavView.get(indexLastTab).deactivate(true);
+                            listNavView.get(position).activate(true);
+                            indexLastTab = position;
+                        }
+                    }
+
+                    try {
+                        onNavViewClickListener.onClick((NavView) v, position);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
         initializeViewPagerBehaviour();
         return this;
     }
@@ -161,6 +217,11 @@ public class NavBarLayout extends LinearLayout {
 
     public NavBarLayout addOnPageChangeListener(OnPageChangeListener l) {
         onPageChangeListener = l;
+        return this;
+    }
+
+    public NavBarLayout setOnNavViewClickListener(OnNavViewClickListener l) {
+        onNavViewClickListener = l;
         return this;
     }
 }

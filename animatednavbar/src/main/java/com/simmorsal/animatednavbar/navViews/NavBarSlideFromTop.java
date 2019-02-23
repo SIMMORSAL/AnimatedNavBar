@@ -17,6 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.simmorsal.animatednavbar.NavView;
@@ -131,7 +132,7 @@ public class NavBarSlideFromTop extends NavView {
 
         animationPace = (int) (height / ((float) animationSpeed / (float) animationChangeSpeed));
 
-        // the reason im performing this check is that the parent, which is most likely the NavBarLayout, extended from LinearLayout
+        // the reason im performing this check is that the parent, which is most likely the NavBarLayout, extended from LinearLayout,
         // for some reason calls onMeasure on itself, which causes this onMeasure to be called as well,
         if (bottomBGOver == -1 || rectFBackgroundOver.right == 0.0) {
             if (isActive) {
@@ -211,6 +212,7 @@ public class NavBarSlideFromTop extends NavView {
             isAnimating = true;
             handlerAnimation.post(runnableActivation);
         } else {
+            isAnimating = false;
             rectFBackgroundOver.bottom = getMeasuredHeight();
             bottomBGOver = getMeasuredHeight();
             invalidate();
@@ -228,6 +230,7 @@ public class NavBarSlideFromTop extends NavView {
             isAnimating = true;
             handlerAnimation.post(runnableDeactivation);
         } else {
+            isAnimating = false;
             rectFBackgroundOver.bottom = 0;
             bottomBGOver = 0;
             invalidate();
@@ -236,6 +239,7 @@ public class NavBarSlideFromTop extends NavView {
 
     @Override
     public void onViewPagerScroll(float scroll) {
+        Log.i("11111", "NavBarSlideFromTop => onViewPagerScroll: " + isAnimating + "   " + scroll);
         if (!isAnimating) {
             bottomBGOver = (int) (scroll * height);
             rectFBackgroundOver.bottom = bottomBGOver;
