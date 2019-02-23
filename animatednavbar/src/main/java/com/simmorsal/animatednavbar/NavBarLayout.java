@@ -72,6 +72,15 @@ public class NavBarLayout extends LinearLayout {
                         navView.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                try {
+                                    // used try catch instead of checking if the listener is null so that if
+                                    // the user initialized it later, this would still work
+                                    onNavViewClickListener.onClick((NavView) v, position, indexLastTab == position);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+
                                 if (indexLastTab != position) {
                                     if (viewPager != null) {
                                         viewPager.setCurrentItem(position, true);
@@ -80,15 +89,6 @@ public class NavBarLayout extends LinearLayout {
                                         listNavView.get(position).activate(true);
                                         indexLastTab = position;
                                     }
-                                }
-
-
-                                try {
-                                    // used try catch instead of checking if the listener is null so that if
-                                    // the user initialized it later, this would still work
-                                    onNavViewClickListener.onClick((NavView) v, position);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
                                 }
                             }
                         });
@@ -185,7 +185,7 @@ public class NavBarLayout extends LinearLayout {
                     }
 
                     try {
-                        onNavViewClickListener.onClick((NavView) v, position);
+                        onNavViewClickListener.onClick((NavView) v, position, indexLastTab == position);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

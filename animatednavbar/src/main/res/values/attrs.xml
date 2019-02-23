@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="NavBarRoundedTop">
+    <declare-styleable name="NavViewRoundedTop">
         <attr name="strokeWidth" format="dimension" />
         <attr name="showSideDividers" format="boolean" />
     </declare-styleable>

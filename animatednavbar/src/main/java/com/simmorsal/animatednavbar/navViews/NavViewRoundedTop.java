@@ -17,7 +17,7 @@ import com.simmorsal.animatednavbar.utils.Tools;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
-public class NavBarRoundedTop extends NavView {
+public class NavViewRoundedTop extends NavView {
 
     private int position;
     private TypedArray attr;
@@ -42,14 +42,14 @@ public class NavBarRoundedTop extends NavView {
     private RectF oval;
     private float strokeWidth;
 
-    public NavBarRoundedTop(Context context) {
+    public NavViewRoundedTop(Context context) {
         super(context);
     }
 
-    public NavBarRoundedTop(Context context, @Nullable AttributeSet attrs) {
+    public NavViewRoundedTop(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
-        attr = context.getTheme().obtainStyledAttributes(attrs, R.styleable.NavBarRoundedTop, 0, 0);
+        attr = context.getTheme().obtainStyledAttributes(attrs, R.styleable.NavViewRoundedTop, 0, 0);
     }
 
     @Override
@@ -88,11 +88,11 @@ public class NavBarRoundedTop extends NavView {
 
 //        Log.i("11111", "NavBarRoundedTop => initializeStuff: attr " + attr.getDimension(R.styleable.NavBarRoundedTop_strokeWidth, 2));
         try {
-            strokeWidth = attr.getDimension(R.styleable.NavBarRoundedTop_strokeWidth, 2);
+            strokeWidth = attr.getDimension(R.styleable.NavViewRoundedTop_strokeWidth, 2);
             if (strokeWidth != 2)
                 strokeWidth = Tools.pxToDp(strokeWidth);
 //            Log.i("11111", "NavBarRoundedTop => initializeStuff: " + attr.getBoolean(R.styleable.NavBarRoundedTop_showSideDividers, false));
-            showSideDividers = attr.getBoolean(R.styleable.NavBarRoundedTop_showSideDividers, false);
+            showSideDividers = attr.getBoolean(R.styleable.NavViewRoundedTop_showSideDividers, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -160,32 +160,32 @@ public class NavBarRoundedTop extends NavView {
     //                    //
     ////////////////////////////////////////////////////////////////////////////////
 
-    public NavBarRoundedTop setTypeface(Typeface typeface) {
+    public NavViewRoundedTop setTypeface(Typeface typeface) {
         paintText.setTypeface(typeface);
         invalidate();
         return this;
     }
 
-    public NavBarRoundedTop showSideDividers(boolean show) {
+    public NavViewRoundedTop showSideDividers(boolean show) {
         showSideDividers = show;
         invalidate();
         return this;
     }
 
-    public NavBarRoundedTop setTitle(String title) {
+    public NavViewRoundedTop setTitle(String title) {
         this.title = title;
         sizeTitle = (int) paintText.measureText(title);
         invalidate();
         return this;
     }
 
-    public NavBarRoundedTop setIcon(Bitmap icon) {
+    public NavViewRoundedTop setIcon(Bitmap icon) {
         this.icon = icon;
         invalidate();
         return this;
     }
 
-    public NavBarRoundedTop setStrokeWidth(float dp) {
+    public NavViewRoundedTop setStrokeWidth(float dp) {
         strokeWidth = dp;
         paintBlock.setStrokeWidth(Tools.dpToPx(dp));
         float offset = Tools.dpToPx(dp / 2f);

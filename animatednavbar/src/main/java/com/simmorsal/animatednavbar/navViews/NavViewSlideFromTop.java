@@ -26,7 +26,7 @@ import com.simmorsal.animatednavbar.utils.Tools;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
-public class NavBarSlideFromTop extends NavView {
+public class NavViewSlideFromTop extends NavView {
 
     int width;
     int height;
@@ -59,13 +59,13 @@ public class NavBarSlideFromTop extends NavView {
 
     private Handler handlerAnimation = new Handler(Looper.getMainLooper());
 
-    public NavBarSlideFromTop(Context context) {
+    public NavViewSlideFromTop(Context context) {
         super(context);
 
         initializeStuff();
     }
 
-    public NavBarSlideFromTop(Context context, @Nullable AttributeSet attrs) {
+    public NavViewSlideFromTop(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
         initializeStuff();
@@ -253,18 +253,18 @@ public class NavBarSlideFromTop extends NavView {
     //                    //
     ////////////////////////////////////////////////////////////////////////////////
 
-    public NavBarSlideFromTop setTitleSize(int titleSizeInPx) {
+    public NavViewSlideFromTop setTitleSize(int titleSizeInPx) {
         this.titleSize = titleSizeInPx;
         requestLayout();
         return this;
     }
 
-    public NavBarSlideFromTop setAnimationSpeed(int animationSpeed) {
+    public NavViewSlideFromTop setAnimationSpeed(int animationSpeed) {
         this.animationSpeed = animationSpeed;
         return this;
     }
 
-    public NavBarSlideFromTop setTypeface(Typeface typeface) {
+    public NavViewSlideFromTop setTypeface(Typeface typeface) {
         paintTitle.setTypeface(typeface);
         if (isFirstRunPassed)
             invalidate();
@@ -275,7 +275,7 @@ public class NavBarSlideFromTop extends NavView {
         return title;
     }
 
-    public NavBarSlideFromTop setTitle(String title) {
+    public NavViewSlideFromTop setTitle(String title) {
         if (title != null && !title.trim().isEmpty()) {
             boolean requiresRemeasure = this.title == null || this.title.isEmpty();
 
@@ -293,7 +293,7 @@ public class NavBarSlideFromTop extends NavView {
         return this;
     }
 
-    public NavBarSlideFromTop setIcon(int resourceId) {
+    public NavViewSlideFromTop setIcon(int resourceId) {
         return setIcon(ContextCompat.getDrawable(getContext(), resourceId));
     }
 
@@ -301,7 +301,7 @@ public class NavBarSlideFromTop extends NavView {
         return icon;
     }
 
-    public NavBarSlideFromTop setIcon(Bitmap icon) {
+    public NavViewSlideFromTop setIcon(Bitmap icon) {
         if (icon != null) {
             boolean requiresRemeasure = this.icon == null;
 
@@ -317,7 +317,7 @@ public class NavBarSlideFromTop extends NavView {
         return this;
     }
 
-    public NavBarSlideFromTop setIcon(Drawable drawable) {
+    public NavViewSlideFromTop setIcon(Drawable drawable) {
 
         if (drawable instanceof BitmapDrawable) {
             return setIcon(((BitmapDrawable) drawable).getBitmap());
@@ -331,32 +331,32 @@ public class NavBarSlideFromTop extends NavView {
         return setIcon(bitmap);
     }
 
-    public NavBarSlideFromTop setBackgroundOverColor(int color) {
+    public NavViewSlideFromTop setBackgroundOverColor(int color) {
         paintBackgroundOver.setColor(color);
         if (isFirstRunPassed)
             invalidate();
         return this;
     }
 
-    public NavBarSlideFromTop setBackgroundUnderColor(int color) {
+    public NavViewSlideFromTop setBackgroundUnderColor(int color) {
         paintBackgroundUnder.setColor(color);
         if (isFirstRunPassed)
             invalidate();
         return this;
     }
 
-    public NavBarSlideFromTop setTitleColor(int color) {
+    public NavViewSlideFromTop setTitleColor(int color) {
         paintTitle.setColor(color);
         if (isFirstRunPassed)
             invalidate();
         return this;
     }
 
-    public NavBarSlideFromTop setIconColorFilter(int color) {
+    public NavViewSlideFromTop setIconColorFilter(int color) {
         return setIconColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP));
     }
 
-    public NavBarSlideFromTop setIconColorFilter(ColorFilter colorFilter) {
+    public NavViewSlideFromTop setIconColorFilter(ColorFilter colorFilter) {
         paintIcon.setColorFilter(colorFilter);
         if (isFirstRunPassed)
             invalidate();
@@ -367,7 +367,7 @@ public class NavBarSlideFromTop extends NavView {
         return isActive;
     }
 
-    public NavBarSlideFromTop setIconSize(int iconSizeDp) {
+    public NavViewSlideFromTop setIconSize(int iconSizeDp) {
         sizeIcon = Tools.dpToPx(iconSizeDp);
         return this;
     }

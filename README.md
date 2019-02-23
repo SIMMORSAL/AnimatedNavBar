@@ -10,7 +10,7 @@
     ``` java
     navBarLayout.setOnNavViewClickListener(new OnNavViewClickListener() {
                 @Override
-                public void onClick(NavView view, int position) {
+                public void onClick(NavView view, int position, boolean isActive) {
                     // you can get reference to each view either by #view.getId(),
                     // or by checking its position in the navigation bar layout. 
                     // **position starts at 0**

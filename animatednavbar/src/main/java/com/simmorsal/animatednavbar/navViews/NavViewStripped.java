@@ -7,17 +7,17 @@ import com.simmorsal.animatednavbar.NavView;
 
 import androidx.annotation.Nullable;
 
-public class NavBarStripped extends NavView {
+public class NavViewStripped extends NavView {
 
 
     private int position;
 
 
-    public NavBarStripped(Context context) {
+    public NavViewStripped(Context context) {
         super(context);
     }
 
-    public NavBarStripped(Context context, @Nullable AttributeSet attrs) {
+    public NavViewStripped(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
